@@ -2,12 +2,13 @@ import 'package:collection/collection.dart';
 import 'package:meta/meta.dart';
 import 'package:swagger_parser/src/parser/model/universal_request_type.dart';
 import 'package:swagger_parser/src/parser/model/universal_type.dart';
+import 'package:swagger_parser/src/utils/content_type_utils.dart';
 
 /// Universal template for containing information about Request
 @immutable
 final class UniversalRequest {
   /// Constructor for [UniversalRequest]
-  const UniversalRequest({
+  UniversalRequest({
     required this.name,
     required this.requestType,
     required this.route,
@@ -16,10 +17,11 @@ final class UniversalRequest {
     this.tags = const [],
     this.operationId,
     this.externalDocsUrl,
-    this.contentType = 'application/json',
+    SwaggerContentType? contentType,
+    this.returnContentType,
     this.description,
     this.isDeprecated = false,
-  });
+  }) : contentType = contentType ?? SwaggerContentType('application', 'json');
 
   /// Request name
   final String name;
@@ -45,18 +47,14 @@ final class UniversalRequest {
   /// Request return type
   final UniversalType? returnType;
 
+  /// The content type of the response.
+  final SwaggerContentType? returnContentType;
+
   /// Request parameters
   final List<UniversalRequestType> parameters;
 
   /// Request content-type
-  final String contentType;
-
-  /// Request has Content-Type 'multipart/form-data'
-  bool get isMultiPart => contentType == 'multipart/form-data';
-
-  /// Request type 'application/x-www-form-urlencoded'
-  bool get isFormUrlEncoded =>
-      contentType == 'application/x-www-form-urlencoded';
+  final SwaggerContentType contentType;
 
   /// Value indicating whether this request is deprecated
   final bool isDeprecated;
@@ -71,12 +69,11 @@ final class UniversalRequest {
           contentType == other.contentType &&
           route == other.route &&
           returnType == other.returnType &&
+          returnContentType == other.returnContentType &&
           const DeepCollectionEquality().equals(tags, other.tags) &&
           operationId == other.operationId &&
           externalDocsUrl == other.externalDocsUrl &&
-          const DeepCollectionEquality().equals(parameters, other.parameters) &&
-          isMultiPart == other.isMultiPart &&
-          isFormUrlEncoded == other.isFormUrlEncoded;
+          const DeepCollectionEquality().equals(parameters, other.parameters);
 
   @override
   int get hashCode =>
@@ -84,13 +81,12 @@ final class UniversalRequest {
       requestType.hashCode ^
       route.hashCode ^
       returnType.hashCode ^
+      returnContentType.hashCode ^
       tags.hashCode ^
       operationId.hashCode ^
       externalDocsUrl.hashCode ^
       contentType.hashCode ^
-      parameters.hashCode ^
-      isMultiPart.hashCode ^
-      isFormUrlEncoded.hashCode;
+      parameters.hashCode;
 
   @override
   String toString() => 'UniversalRequest(name: $name, '
@@ -100,7 +96,8 @@ final class UniversalRequest {
       'requestType: $requestType, '
       'route: $route, '
       'parameters: $parameters, '
-      'contentType: $contentType)';
+      'contentType: $contentType, '
+      'returnContentType: $returnContentType)';
 }
 
 /// Request type

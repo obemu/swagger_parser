@@ -2,6 +2,7 @@ import 'package:swagger_parser/src/generator/config/generator_config.dart';
 import 'package:swagger_parser/src/generator/generator/fill_controller.dart';
 import 'package:swagger_parser/src/generator/model/programming_language.dart';
 import 'package:swagger_parser/src/parser/swagger_parser_core.dart';
+import 'package:swagger_parser/src/utils/content_type_utils.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -255,16 +256,16 @@ abstract class ClassNameClient {
 
   group('One empty request', () {
     test('dart + retrofit', () async {
-      const restClient = UniversalRestClient(
+      final restClient = UniversalRestClient(
         name: 'ClassName',
-        imports: {},
+        imports: const {},
         requests: [
           UniversalRequest(
             name: 'getRequest',
             requestType: HttpRequestType.get,
             route: '/',
             returnType: null,
-            parameters: [],
+            parameters: const [],
           ),
         ],
       );
@@ -290,16 +291,16 @@ abstract class ClassNameClient {
     });
 
     test('kotlin + retrofit', () async {
-      const restClient = UniversalRestClient(
+      final restClient = UniversalRestClient(
         name: 'ClassName',
-        imports: {},
+        imports: const {},
         requests: [
           UniversalRequest(
             name: 'getRequest',
             requestType: HttpRequestType.get,
             route: '/',
             returnType: null,
-            parameters: [],
+            parameters: const [],
           ),
         ],
       );
@@ -325,72 +326,72 @@ interface ClassNameClient {
 
   group('All possible type of requests', () {
     test('dart + retrofit', () async {
-      const restClient = UniversalRestClient(
+      final restClient = UniversalRestClient(
         name: 'ClassName',
-        imports: {},
+        imports: const {},
         requests: [
           UniversalRequest(
             name: 'getRequest',
             requestType: HttpRequestType.get,
             route: '/',
             returnType: null,
-            parameters: [],
+            parameters: const [],
           ),
           UniversalRequest(
             name: 'postRequest',
             requestType: HttpRequestType.post,
             route: '/',
             returnType: null,
-            parameters: [],
+            parameters: const [],
           ),
           UniversalRequest(
             name: 'putRequest',
             requestType: HttpRequestType.put,
             route: '/',
             returnType: null,
-            parameters: [],
+            parameters: const [],
           ),
           UniversalRequest(
             name: 'headRequest',
             requestType: HttpRequestType.head,
             route: '/',
             returnType: null,
-            parameters: [],
+            parameters: const [],
           ),
           UniversalRequest(
             name: 'deleteRequest',
             requestType: HttpRequestType.delete,
             route: '/',
             returnType: null,
-            parameters: [],
+            parameters: const [],
           ),
           UniversalRequest(
             name: 'patchRequest',
             requestType: HttpRequestType.patch,
             route: '/',
             returnType: null,
-            parameters: [],
+            parameters: const [],
           ),
           UniversalRequest(
             name: 'connectRequest',
             requestType: HttpRequestType.connect,
             route: '/',
             returnType: null,
-            parameters: [],
+            parameters: const [],
           ),
           UniversalRequest(
             name: 'optionsRequest',
             requestType: HttpRequestType.options,
             route: '/',
             returnType: null,
-            parameters: [],
+            parameters: const [],
           ),
           UniversalRequest(
             name: 'traceRequest',
             requestType: HttpRequestType.trace,
             route: '/',
             returnType: null,
-            parameters: [],
+            parameters: const [],
           ),
         ],
       );
@@ -440,72 +441,72 @@ abstract class ClassNameClient {
     });
 
     test('kotlin + retrofit', () async {
-      const restClient = UniversalRestClient(
+      final restClient = UniversalRestClient(
         name: 'ClassName',
-        imports: {},
+        imports: const {},
         requests: [
           UniversalRequest(
             name: 'getRequest',
             requestType: HttpRequestType.get,
             route: '/',
             returnType: null,
-            parameters: [],
+            parameters: const [],
           ),
           UniversalRequest(
             name: 'postRequest',
             requestType: HttpRequestType.post,
             route: '/',
             returnType: null,
-            parameters: [],
+            parameters: const [],
           ),
           UniversalRequest(
             name: 'putRequest',
             requestType: HttpRequestType.put,
             route: '/',
             returnType: null,
-            parameters: [],
+            parameters: const [],
           ),
           UniversalRequest(
             name: 'headRequest',
             requestType: HttpRequestType.head,
             route: '/',
             returnType: null,
-            parameters: [],
+            parameters: const [],
           ),
           UniversalRequest(
             name: 'deleteRequest',
             requestType: HttpRequestType.delete,
             route: '/',
             returnType: null,
-            parameters: [],
+            parameters: const [],
           ),
           UniversalRequest(
             name: 'patchRequest',
             requestType: HttpRequestType.patch,
             route: '/',
             returnType: null,
-            parameters: [],
+            parameters: const [],
           ),
           UniversalRequest(
             name: 'connectRequest',
             requestType: HttpRequestType.connect,
             route: '/',
             returnType: null,
-            parameters: [],
+            parameters: const [],
           ),
           UniversalRequest(
             name: 'optionsRequest',
             requestType: HttpRequestType.options,
             route: '/',
             returnType: null,
-            parameters: [],
+            parameters: const [],
           ),
           UniversalRequest(
             name: 'traceRequest',
             requestType: HttpRequestType.trace,
             route: '/',
             returnType: null,
-            parameters: [],
+            parameters: const [],
           ),
         ],
       );
@@ -555,30 +556,30 @@ interface ClassNameClient {
 
   group('Returned type', () {
     test('dart + retrofit', () async {
-      const restClient = UniversalRestClient(
+      final restClient = UniversalRestClient(
         name: 'ClassName',
-        imports: {},
+        imports: const {},
         requests: [
           UniversalRequest(
             name: 'getRequest',
             requestType: HttpRequestType.get,
             route: '/',
             returnType: null,
-            parameters: [],
+            parameters: const [],
           ),
           UniversalRequest(
             name: 'getStringRequest',
             requestType: HttpRequestType.get,
             route: '/string',
-            returnType: UniversalType(type: 'string', isRequired: true),
-            parameters: [],
+            returnType: const UniversalType(type: 'string', isRequired: true),
+            parameters: const [],
           ),
           UniversalRequest(
             name: 'getBoolRequest',
             requestType: HttpRequestType.get,
             route: '/boolean',
-            returnType: UniversalType(type: 'boolean', isRequired: true),
-            parameters: [],
+            returnType: const UniversalType(type: 'boolean', isRequired: true),
+            parameters: const [],
           ),
         ],
       );
@@ -610,30 +611,30 @@ abstract class ClassNameClient {
     });
 
     test('kotlin + retrofit', () async {
-      const restClient = UniversalRestClient(
+      final restClient = UniversalRestClient(
         name: 'ClassName',
-        imports: {},
+        imports: const {},
         requests: [
           UniversalRequest(
             name: 'getRequest',
             requestType: HttpRequestType.get,
             route: '/',
             returnType: null,
-            parameters: [],
+            parameters: const [],
           ),
           UniversalRequest(
             name: 'getStringRequest',
             requestType: HttpRequestType.get,
             route: '/string',
-            returnType: UniversalType(type: 'string', isRequired: true),
-            parameters: [],
+            returnType: const UniversalType(type: 'string', isRequired: true),
+            parameters: const [],
           ),
           UniversalRequest(
             name: 'getBoolRequest',
             requestType: HttpRequestType.get,
             route: '/boolean',
-            returnType: UniversalType(type: 'boolean', isRequired: true),
-            parameters: [],
+            returnType: const UniversalType(type: 'boolean', isRequired: true),
+            parameters: const [],
           ),
         ],
       );
@@ -665,16 +666,16 @@ interface ClassNameClient {
 
   group('Array type', () {
     test('dart + retrofit', () async {
-      const restClient = UniversalRestClient(
+      final restClient = UniversalRestClient(
         name: 'ClassName',
-        imports: {},
+        imports: const {},
         requests: [
           UniversalRequest(
             name: 'getRequest',
             requestType: HttpRequestType.get,
             route: '/',
             returnType: null,
-            parameters: [
+            parameters: const [
               UniversalRequestType(
                 parameterType: HttpParameterType.query,
                 type: UniversalType(
@@ -704,7 +705,7 @@ interface ClassNameClient {
             name: 'listOfList',
             requestType: HttpRequestType.get,
             route: '/list-of-list',
-            returnType: UniversalType(
+            returnType: const UniversalType(
               type: 'string',
               wrappingCollections: [
                 UniversalCollections.list,
@@ -712,7 +713,7 @@ interface ClassNameClient {
               ],
               isRequired: true,
             ),
-            parameters: [],
+            parameters: const [],
           ),
         ],
       );
@@ -744,16 +745,16 @@ abstract class ClassNameClient {
     });
 
     test('kotlin + retrofit', () async {
-      const restClient = UniversalRestClient(
+      final restClient = UniversalRestClient(
         name: 'ClassName',
-        imports: {},
+        imports: const {},
         requests: [
           UniversalRequest(
             name: 'getRequest',
             requestType: HttpRequestType.get,
             route: '/',
             returnType: null,
-            parameters: [
+            parameters: const [
               UniversalRequestType(
                 parameterType: HttpParameterType.query,
                 type: UniversalType(
@@ -783,7 +784,7 @@ abstract class ClassNameClient {
             name: 'listOfList',
             requestType: HttpRequestType.get,
             route: '/list-of-list',
-            returnType: UniversalType(
+            returnType: const UniversalType(
               type: 'string',
               wrappingCollections: [
                 UniversalCollections.list,
@@ -791,7 +792,7 @@ abstract class ClassNameClient {
               ],
               isRequired: true,
             ),
-            parameters: [],
+            parameters: const [],
           ),
         ],
       );
@@ -823,16 +824,16 @@ interface ClassNameClient {
 
   group('Single parameter', () {
     test('dart + retrofit', () async {
-      const restClient = UniversalRestClient(
+      final restClient = UniversalRestClient(
         name: 'ClassName',
-        imports: {},
+        imports: const {},
         requests: [
           UniversalRequest(
             name: 'getRequest',
             requestType: HttpRequestType.get,
             route: '/',
-            returnType: UniversalType(type: 'string', isRequired: true),
-            parameters: [
+            returnType: const UniversalType(type: 'string', isRequired: true),
+            parameters: const [
               UniversalRequestType(
                 parameterType: HttpParameterType.query,
                 type: UniversalType(
@@ -870,16 +871,16 @@ abstract class ClassNameClient {
     });
 
     test('kotlin + retrofit', () async {
-      const restClient = UniversalRestClient(
+      final restClient = UniversalRestClient(
         name: 'ClassName',
-        imports: {},
+        imports: const {},
         requests: [
           UniversalRequest(
             name: 'getRequest',
             requestType: HttpRequestType.get,
             route: '/',
-            returnType: UniversalType(type: 'string', isRequired: true),
-            parameters: [
+            returnType: const UniversalType(type: 'string', isRequired: true),
+            parameters: const [
               UniversalRequestType(
                 parameterType: HttpParameterType.query,
                 type: UniversalType(
@@ -917,16 +918,16 @@ interface ClassNameClient {
 
   group('All request types of parameter except extras type', () {
     test('dart + retrofit', () async {
-      const restClient = UniversalRestClient(
+      final restClient = UniversalRestClient(
         name: 'ClassName',
-        imports: {},
+        imports: const {},
         requests: [
           UniversalRequest(
             name: 'getRequest',
             requestType: HttpRequestType.get,
             route: '/{id}',
             returnType: null,
-            parameters: [
+            parameters: const [
               UniversalRequestType(
                 parameterType: HttpParameterType.header,
                 type: UniversalType(
@@ -989,16 +990,16 @@ abstract class ClassNameClient {
     });
 
     test('kotlin + retrofit', () async {
-      const restClient = UniversalRestClient(
+      final restClient = UniversalRestClient(
         name: 'ClassName',
-        imports: {},
+        imports: const {},
         requests: [
           UniversalRequest(
             name: 'getRequest',
             requestType: HttpRequestType.get,
             route: '/{id}',
             returnType: null,
-            parameters: [
+            parameters: const [
               UniversalRequestType(
                 parameterType: HttpParameterType.header,
                 type: UniversalType(
@@ -1061,17 +1062,17 @@ interface ClassNameClient {
 
   group('Multipart', () {
     test('dart + retrofit', () async {
-      const restClient = UniversalRestClient(
+      final restClient = UniversalRestClient(
         name: 'ClassName',
-        imports: {'AnotherFile'},
+        imports: const {'AnotherFile'},
         requests: [
           UniversalRequest(
             name: 'sendMultiPart',
             requestType: HttpRequestType.post,
             route: '/send',
             returnType: null,
-            contentType: 'multipart/form-data',
-            parameters: [
+            contentType: SwaggerContentType.multipart,
+            parameters: const [
               UniversalRequestType(
                 parameterType: HttpParameterType.header,
                 type: UniversalType(
@@ -1125,9 +1126,9 @@ interface ClassNameClient {
             name: 'singleEntity',
             requestType: HttpRequestType.post,
             route: '/single',
-            returnType: UniversalType(type: 'boolean', isRequired: true),
-            contentType: 'multipart/form-data',
-            parameters: [
+            returnType: const UniversalType(type: 'boolean', isRequired: true),
+            contentType: SwaggerContentType.multipart,
+            parameters: const [
               UniversalRequestType(
                 parameterType: HttpParameterType.body,
                 type: UniversalType(
@@ -1180,17 +1181,17 @@ abstract class ClassNameClient {
     });
 
     test('dart + retrofit with useMultipartFile = true', () async {
-      const restClient = UniversalRestClient(
+      final restClient = UniversalRestClient(
         name: 'ClassName',
-        imports: {'AnotherFile'},
+        imports: const {'AnotherFile'},
         requests: [
           UniversalRequest(
             name: 'sendMultiPart',
             requestType: HttpRequestType.post,
             route: '/send',
             returnType: null,
-            contentType: 'multipart/form-data',
-            parameters: [
+            contentType: SwaggerContentType.multipart,
+            parameters: const [
               UniversalRequestType(
                 parameterType: HttpParameterType.header,
                 type: UniversalType(
@@ -1253,9 +1254,9 @@ abstract class ClassNameClient {
             name: 'singleEntity',
             requestType: HttpRequestType.post,
             route: '/single',
-            returnType: UniversalType(type: 'boolean', isRequired: true),
-            contentType: 'multipart/form-data',
-            parameters: [
+            returnType: const UniversalType(type: 'boolean', isRequired: true),
+            contentType: SwaggerContentType.multipart,
+            parameters: const [
               UniversalRequestType(
                 parameterType: HttpParameterType.body,
                 type: UniversalType(
@@ -1308,17 +1309,17 @@ abstract class ClassNameClient {
     });
 
     test('kotlin + retrofit', () async {
-      const restClient = UniversalRestClient(
+      final restClient = UniversalRestClient(
         name: 'ClassName',
-        imports: {'AnotherFile'},
+        imports: const {'AnotherFile'},
         requests: [
           UniversalRequest(
             name: 'sendMultiPart',
             requestType: HttpRequestType.post,
             route: '/send',
             returnType: null,
-            contentType: 'multipart/form-data',
-            parameters: [
+            contentType: SwaggerContentType.multipart,
+            parameters: const [
               UniversalRequestType(
                 parameterType: HttpParameterType.header,
                 type: UniversalType(
@@ -1372,9 +1373,9 @@ abstract class ClassNameClient {
             name: 'singleEntity',
             requestType: HttpRequestType.post,
             route: '/single',
-            returnType: UniversalType(type: 'boolean', isRequired: true),
-            contentType: 'multipart/form-data',
-            parameters: [
+            returnType: const UniversalType(type: 'boolean', isRequired: true),
+            contentType: SwaggerContentType.multipart,
+            parameters: const [
               UniversalRequestType(
                 parameterType: HttpParameterType.body,
                 type: UniversalType(
@@ -1422,17 +1423,17 @@ interface ClassNameClient {
 
   group('FormUrlEncoded', () {
     test('dart + retrofit', () async {
-      const restClient = UniversalRestClient(
+      final restClient = UniversalRestClient(
         name: 'ClassName',
-        imports: {'Lol'},
+        imports: const {'Lol'},
         requests: [
           UniversalRequest(
             name: 'sendBody',
             requestType: HttpRequestType.post,
             route: '/send',
             returnType: null,
-            contentType: 'application/x-www-form-urlencoded',
-            parameters: [
+            contentType: SwaggerContentType.formUrlEncoded,
+            parameters: const [
               UniversalRequestType(
                 parameterType: HttpParameterType.header,
                 type: UniversalType(
@@ -1478,17 +1479,17 @@ abstract class ClassNameClient {
     });
 
     test('kotlin + retrofit', () async {
-      const restClient = UniversalRestClient(
+      final restClient = UniversalRestClient(
         name: 'ClassName',
-        imports: {'Lol'},
+        imports: const {'Lol'},
         requests: [
           UniversalRequest(
             name: 'sendBody',
             requestType: HttpRequestType.post,
             route: '/send',
             returnType: null,
-            contentType: 'application/x-www-form-urlencoded',
-            parameters: [
+            contentType: SwaggerContentType.formUrlEncoded,
+            parameters: const [
               UniversalRequestType(
                 parameterType: HttpParameterType.header,
                 type: UniversalType(
@@ -1532,16 +1533,16 @@ interface ClassNameClient {
 
   group('Required parameters', () {
     test('dart + retrofit', () async {
-      const restClient = UniversalRestClient(
+      final restClient = UniversalRestClient(
         name: 'ClassName',
-        imports: {},
+        imports: const {},
         requests: [
           UniversalRequest(
             name: 'getRequest',
             requestType: HttpRequestType.get,
             route: '/{id}',
-            returnType: UniversalType(type: 'string', isRequired: true),
-            parameters: [
+            returnType: const UniversalType(type: 'string', isRequired: true),
+            parameters: const [
               UniversalRequestType(
                 parameterType: HttpParameterType.query,
                 type: UniversalType(
@@ -1602,16 +1603,16 @@ abstract class ClassNameClient {
     });
 
     test('kotlin + retrofit', () async {
-      const restClient = UniversalRestClient(
+      final restClient = UniversalRestClient(
         name: 'ClassName',
-        imports: {},
+        imports: const {},
         requests: [
           UniversalRequest(
             name: 'getRequest',
             requestType: HttpRequestType.get,
             route: '/{id}',
-            returnType: UniversalType(type: 'string', isRequired: true),
-            parameters: [
+            returnType: const UniversalType(type: 'string', isRequired: true),
+            parameters: const [
               UniversalRequestType(
                 parameterType: HttpParameterType.query,
                 type: UniversalType(
@@ -1671,16 +1672,16 @@ interface ClassNameClient {
 
   group('Default parameters', () {
     test('dart + retrofit', () async {
-      const restClient = UniversalRestClient(
+      final restClient = UniversalRestClient(
         name: 'ClassName',
-        imports: {'Unit', 'Soma'},
+        imports: const {'Unit', 'Soma'},
         requests: [
           UniversalRequest(
             name: 'sendMessage',
             requestType: HttpRequestType.post,
             route: '/send',
             returnType: null,
-            parameters: [
+            parameters: const [
               UniversalRequestType(
                 parameterType: HttpParameterType.header,
                 type: UniversalType(
@@ -1769,16 +1770,16 @@ abstract class ClassNameClient {
     });
 
     test('kotlin + retrofit', () async {
-      const restClient = UniversalRestClient(
+      final restClient = UniversalRestClient(
         name: 'ClassName',
-        imports: {},
+        imports: const {},
         requests: [
           UniversalRequest(
             name: 'sendMessage',
             requestType: HttpRequestType.post,
             route: '/send',
             returnType: null,
-            parameters: [
+            parameters: const [
               UniversalRequestType(
                 parameterType: HttpParameterType.header,
                 type: UniversalType(
@@ -1862,20 +1863,20 @@ interface ClassNameClient {
     });
 
     test('Dart + retrofit nullability of request parameters', () async {
-      const restClient = UniversalRestClient(
+      final restClient = UniversalRestClient(
         name: 'ClassName',
-        imports: {},
+        imports: const {},
         requests: [
           UniversalRequest(
             name: 'getRequest',
             requestType: HttpRequestType.get,
             route: '/request',
-            returnType: UniversalType(
+            returnType: const UniversalType(
               type: 'string',
               nullable: true,
               isRequired: false,
             ),
-            parameters: [
+            parameters: const [
               UniversalRequestType(
                 parameterType: HttpParameterType.query,
                 type: UniversalType(
@@ -1897,8 +1898,8 @@ interface ClassNameClient {
             name: 'getRequest2',
             requestType: HttpRequestType.get,
             route: '/request2',
-            returnType: UniversalType(type: 'string', isRequired: true),
-            parameters: [
+            returnType: const UniversalType(type: 'string', isRequired: true),
+            parameters: const [
               UniversalRequestType(
                 parameterType: HttpParameterType.query,
                 type: UniversalType(
@@ -1947,16 +1948,16 @@ abstract class ClassNameClient {
     });
 
     test('dart + retrofit nullable parameters', () async {
-      const restClient = UniversalRestClient(
+      final restClient = UniversalRestClient(
         name: 'ClassName',
-        imports: {},
+        imports: const {},
         requests: [
           UniversalRequest(
             name: 'getRequest',
             requestType: HttpRequestType.get,
             route: '/request',
-            returnType: UniversalType(type: 'string', isRequired: true),
-            parameters: [
+            returnType: const UniversalType(type: 'string', isRequired: true),
+            parameters: const [
               UniversalRequestType(
                 parameterType: HttpParameterType.query,
                 type: UniversalType(
@@ -2043,20 +2044,20 @@ abstract class ClassNameClient {
     });
 
     test('Kotlin nullability of request parameters', () async {
-      const restClient = UniversalRestClient(
+      final restClient = UniversalRestClient(
         name: 'ClassName',
-        imports: {},
+        imports: const {},
         requests: [
           UniversalRequest(
             name: 'getRequest',
             requestType: HttpRequestType.get,
             route: '/request',
-            returnType: UniversalType(
+            returnType: const UniversalType(
               type: 'string',
               nullable: true,
               isRequired: true,
             ),
-            parameters: [
+            parameters: const [
               UniversalRequestType(
                 parameterType: HttpParameterType.query,
                 type: UniversalType(
@@ -2078,8 +2079,8 @@ abstract class ClassNameClient {
             name: 'getRequest2',
             requestType: HttpRequestType.get,
             route: '/request2',
-            returnType: UniversalType(type: 'string', isRequired: true),
-            parameters: [
+            returnType: const UniversalType(type: 'string', isRequired: true),
+            parameters: const [
               UniversalRequestType(
                 parameterType: HttpParameterType.query,
                 type: UniversalType(
@@ -2126,16 +2127,16 @@ interface ClassNameClient {
     });
 
     test('kotlin nullable parameters', () async {
-      const restClient = UniversalRestClient(
+      final restClient = UniversalRestClient(
         name: 'ClassName',
-        imports: {},
+        imports: const {},
         requests: [
           UniversalRequest(
             name: 'getRequest',
             requestType: HttpRequestType.get,
             route: '/request',
-            returnType: UniversalType(type: 'string', isRequired: true),
-            parameters: [
+            returnType: const UniversalType(type: 'string', isRequired: true),
+            parameters: const [
               UniversalRequestType(
                 parameterType: HttpParameterType.query,
                 type: UniversalType(
@@ -2222,16 +2223,16 @@ interface ClassNameClient {
 
   group('One empty request with @Extras option for dart', () {
     test('dart + retrofit', () async {
-      const restClient = UniversalRestClient(
+      final restClient = UniversalRestClient(
         name: 'ClassName',
-        imports: {},
+        imports: const {},
         requests: [
           UniversalRequest(
             name: 'getRequest',
             requestType: HttpRequestType.get,
             route: '/{id}',
             returnType: null,
-            parameters: [],
+            parameters: const [],
           ),
         ],
       );
@@ -2288,16 +2289,16 @@ interface ClassNameClient {}
 
   group('All request types of parameter with @Extras option for dart', () {
     test('dart + retrofit', () async {
-      const restClient = UniversalRestClient(
+      final restClient = UniversalRestClient(
         name: 'ClassName',
-        imports: {},
+        imports: const {},
         requests: [
           UniversalRequest(
             name: 'getRequest',
             requestType: HttpRequestType.get,
             route: '/{id}',
             returnType: null,
-            parameters: [
+            parameters: const [
               UniversalRequestType(
                 parameterType: HttpParameterType.header,
                 type: UniversalType(
@@ -2365,16 +2366,16 @@ abstract class ClassNameClient {
     });
 
     test('kotlin + retrofit', () async {
-      const restClient = UniversalRestClient(
+      final restClient = UniversalRestClient(
         name: 'ClassName',
-        imports: {},
+        imports: const {},
         requests: [
           UniversalRequest(
             name: 'getRequest',
             requestType: HttpRequestType.get,
             route: '/{id}',
             returnType: null,
-            parameters: [
+            parameters: const [
               UniversalRequestType(
                 parameterType: HttpParameterType.header,
                 type: UniversalType(
@@ -2438,19 +2439,19 @@ interface ClassNameClient {
 
   group('Extras metadata', () {
     test('adds OpenAPI metadata into extras when enabled', () async {
-      const restClient = UniversalRestClient(
+      final restClient = UniversalRestClient(
         name: 'ClassName',
-        imports: {},
+        imports: const {},
         requests: [
           UniversalRequest(
             name: 'getRequest',
             operationId: 'getPet',
-            tags: ['pets', 'inventory'],
+            tags: const ['pets', 'inventory'],
             externalDocsUrl: 'https://docs.example.com/pets',
             requestType: HttpRequestType.get,
             route: '/pet',
             returnType: null,
-            parameters: [],
+            parameters: const [],
           ),
         ],
       );
@@ -2495,19 +2496,19 @@ abstract class ClassNameClient {
     test(
       'generates OpenAPI metadata constants even without default extras param',
       () async {
-        const restClient = UniversalRestClient(
+        final restClient = UniversalRestClient(
           name: 'ClassName',
-          imports: {},
+          imports: const {},
           requests: [
             UniversalRequest(
               name: 'getRequest',
               operationId: 'getPet',
-              tags: ['pets', 'inventory'],
+              tags: const ['pets', 'inventory'],
               externalDocsUrl: 'https://docs.example.com/pets',
               requestType: HttpRequestType.get,
               route: '/pet',
               returnType: null,
-              parameters: [],
+              parameters: const [],
             ),
           ],
         );
@@ -2547,19 +2548,19 @@ abstract class ClassNameClient {
     );
 
     test('dio options do not inject extras automatically', () async {
-      const restClient = UniversalRestClient(
+      final restClient = UniversalRestClient(
         name: 'ClassName',
-        imports: {},
+        imports: const {},
         requests: [
           UniversalRequest(
             name: 'getRequest',
             operationId: 'getPet',
-            tags: ['pets'],
+            tags: const ['pets'],
             externalDocsUrl: 'https://docs.example.com/pets/get',
             requestType: HttpRequestType.get,
             route: '/pet',
             returnType: null,
-            parameters: [],
+            parameters: const [],
           ),
         ],
       );
@@ -2603,9 +2604,9 @@ abstract class ClassNameClient {
 
   group('Description', () {
     test('dart + retrofit', () async {
-      const restClient = UniversalRestClient(
+      final restClient = UniversalRestClient(
         name: 'ClassName',
-        imports: {'Some'},
+        imports: const {'Some'},
         requests: [
           UniversalRequest(
             name: 'some',
@@ -2613,7 +2614,7 @@ abstract class ClassNameClient {
             route: '/some',
             description: 'Some description',
             returnType: null,
-            parameters: [],
+            parameters: const [],
           ),
         ],
       );
@@ -2642,9 +2643,9 @@ abstract class ClassNameClient {
     });
 
     test('kotlin + retrofit', () async {
-      const restClient = UniversalRestClient(
+      final restClient = UniversalRestClient(
         name: 'ClassName',
-        imports: {'Some'},
+        imports: const {'Some'},
         requests: [
           UniversalRequest(
             name: 'some',
@@ -2652,7 +2653,7 @@ abstract class ClassNameClient {
             route: '/some',
             description: 'Some description',
             returnType: null,
-            parameters: [],
+            parameters: const [],
           ),
         ],
       );
@@ -2677,20 +2678,20 @@ interface ClassNameClient {
     });
 
     test('Dart + retrofit nullability of request parameters', () async {
-      const restClient = UniversalRestClient(
+      final restClient = UniversalRestClient(
         name: 'ClassName',
-        imports: {},
+        imports: const {},
         requests: [
           UniversalRequest(
             name: 'getRequest',
             requestType: HttpRequestType.get,
             route: '/request',
-            returnType: UniversalType(
+            returnType: const UniversalType(
               type: 'string',
               nullable: true,
               isRequired: true,
             ),
-            parameters: [
+            parameters: const [
               UniversalRequestType(
                 parameterType: HttpParameterType.query,
                 type: UniversalType(
@@ -2712,8 +2713,8 @@ interface ClassNameClient {
             name: 'getRequest2',
             requestType: HttpRequestType.get,
             route: '/request2',
-            returnType: UniversalType(type: 'string', isRequired: true),
-            parameters: [
+            returnType: const UniversalType(type: 'string', isRequired: true),
+            parameters: const [
               UniversalRequestType(
                 parameterType: HttpParameterType.query,
                 type: UniversalType(
@@ -2762,16 +2763,16 @@ abstract class ClassNameClient {
     });
 
     test('dart + retrofit nullable parameters', () async {
-      const restClient = UniversalRestClient(
+      final restClient = UniversalRestClient(
         name: 'ClassName',
-        imports: {},
+        imports: const {},
         requests: [
           UniversalRequest(
             name: 'getRequest',
             requestType: HttpRequestType.get,
             route: '/request',
-            returnType: UniversalType(type: 'string', isRequired: true),
-            parameters: [
+            returnType: const UniversalType(type: 'string', isRequired: true),
+            parameters: const [
               UniversalRequestType(
                 parameterType: HttpParameterType.query,
                 type: UniversalType(
@@ -2858,20 +2859,20 @@ abstract class ClassNameClient {
     });
 
     test('Kotlin nullability of request parameters', () async {
-      const restClient = UniversalRestClient(
+      final restClient = UniversalRestClient(
         name: 'ClassName',
-        imports: {},
+        imports: const {},
         requests: [
           UniversalRequest(
             name: 'getRequest',
             requestType: HttpRequestType.get,
             route: '/request',
-            returnType: UniversalType(
+            returnType: const UniversalType(
               type: 'string',
               nullable: true,
               isRequired: true,
             ),
-            parameters: [
+            parameters: const [
               UniversalRequestType(
                 parameterType: HttpParameterType.query,
                 type: UniversalType(
@@ -2893,8 +2894,8 @@ abstract class ClassNameClient {
             name: 'getRequest2',
             requestType: HttpRequestType.get,
             route: '/request2',
-            returnType: UniversalType(type: 'string', isRequired: true),
-            parameters: [
+            returnType: const UniversalType(type: 'string', isRequired: true),
+            parameters: const [
               UniversalRequestType(
                 parameterType: HttpParameterType.query,
                 type: UniversalType(
@@ -2941,16 +2942,16 @@ interface ClassNameClient {
     });
 
     test('kotlin nullable parameters', () async {
-      const restClient = UniversalRestClient(
+      final restClient = UniversalRestClient(
         name: 'ClassName',
-        imports: {},
+        imports: const {},
         requests: [
           UniversalRequest(
             name: 'getRequest',
             requestType: HttpRequestType.get,
             route: '/request',
-            returnType: UniversalType(type: 'string', isRequired: true),
-            parameters: [
+            returnType: const UniversalType(type: 'string', isRequired: true),
+            parameters: const [
               UniversalRequestType(
                 parameterType: HttpParameterType.query,
                 type: UniversalType(

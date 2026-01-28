@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:swagger_parser/src/generator/model/field_parser.dart';
 import 'package:swagger_parser/src/generator/model/generated_file.dart';
 import 'package:swagger_parser/src/generator/model/json_serializer.dart';
@@ -119,7 +121,7 @@ enum ProgrammingLanguage {
     UniversalRestClient restClient,
     String name, {
     required bool markFilesAsGenerated,
-    required String defaultContentType,
+    required ContentType defaultContentType,
     required bool useMultipartFile,
     required bool generateUrlsConstants,
     bool extrasParameterByDefault = false,

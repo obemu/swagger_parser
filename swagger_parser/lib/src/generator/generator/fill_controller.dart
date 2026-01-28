@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:swagger_parser/src/generator/config/generator_config.dart';
 import 'package:swagger_parser/src/generator/model/generated_file.dart';
 import 'package:swagger_parser/src/generator/model/json_serializer.dart';
@@ -90,7 +92,7 @@ final class FillController {
         restClient,
         restClient.name.toPascal + postfix.toPascal,
         markFilesAsGenerated: config.markFilesAsGenerated,
-        defaultContentType: config.defaultContentType,
+        defaultContentType: ContentType.parse(config.defaultContentType),
         extrasParameterByDefault: config.extrasParameterByDefault,
         dioOptionsParameterByDefault: config.dioOptionsParameterByDefault,
         addOpenApiMetadata: config.addOpenApiMetadata,

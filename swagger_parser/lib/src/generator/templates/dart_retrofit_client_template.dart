@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:collection/collection.dart';
 import 'package:swagger_parser/src/generator/model/json_serializer.dart';
 import 'package:swagger_parser/src/generator/model/programming_language.dart';
 import 'package:swagger_parser/src/parser/model/normalized_identifier.dart';
 import 'package:swagger_parser/src/parser/swagger_parser_core.dart';
 import 'package:swagger_parser/src/utils/base_utils.dart';
+import 'package:swagger_parser/src/utils/content_type_utils.dart';
 import 'package:swagger_parser/src/utils/type_utils.dart';
 
 String getStaticFieldName(UniversalRequest request) => request.name.toCamel;
@@ -12,7 +15,7 @@ String getStaticFieldName(UniversalRequest request) => request.name.toCamel;
 String dartRetrofitClientTemplate({
   required UniversalRestClient restClient,
   required String name,
-  required String defaultContentType,
+  required ContentType defaultContentType,
   required bool useMultipartFile,
   required bool generateUrlsConstants,
   bool extrasParameterByDefault = false,
@@ -48,6 +51,8 @@ String dartRetrofitClientTemplate({
       : restClient.imports;
 
   final sb = StringBuffer('''
+import 'dart:typed_data';
+
 ${_convertImport(restClient)}${ioImport(parameterTypes, useMultipartFile: useMultipartFile)}import 'package:dio/dio.dart'${_hideHeaders(restClient, defaultContentType)};
 ${flutterComputeImport}import 'package:retrofit/retrofit.dart';
 ${dartImports(imports: imports, pathPrefix: '../models/')}
@@ -105,7 +110,7 @@ ${restClient.requests.map((e) => '\t/// ${e.route}\n\tstatic const ${getStaticFi
 
 String _toClientRequest(
   UniversalRequest request,
-  String defaultContentType, {
+  ContentType defaultContentType, {
   required String className,
   required bool originalHttpResponse,
   required bool addExtrasParameter,
@@ -129,19 +134,32 @@ String _toClientRequest(
     responseType = _renameUnionTypes(responseType);
   }
 
-  // Check if this is a binary response (file download)
+  // Check if this is a binary response (file download).
   final isBinaryResponse = request.returnType?.format == 'binary' ||
       (request.returnType?.type == 'string' &&
           request.returnType?.format == 'binary');
 
-  // For binary responses, we need to use HttpResponse<List<int>> and add @DioResponseType
-  final finalResponseType = isBinaryResponse
-      ? 'HttpResponse<List<int>>'
-      : (originalHttpResponse ? 'HttpResponse<$responseType>' : responseType);
+  String dioResponseTypeAnnotation;
+  String finalResponseType;
+  if (request.returnContentType?.isNdJson ?? false) {
+    finalResponseType = 'Stream<$responseType>';
+    dioResponseTypeAnnotation = '\n  @DioResponseType(ResponseType.stream)';
+    dioResponseTypeAnnotation = '';
+  } else if (isBinaryResponse) {
+    // For binary responses, we need to use HttpResponse<List<int>> and add
+    // @DioResponseType(ResponseType.bytes) after @GET
 
-  // Add @DioResponseType(ResponseType.bytes) for binary responses - after @GET
-  final dioResponseTypeAnnotation =
-      isBinaryResponse ? '\n  @DioResponseType(ResponseType.bytes)' : '';
+    //finalResponseType = 'Future<HttpResponse<List<int>>>';
+    //dioResponseTypeAnnotation = '\n  @DioResponseType(ResponseType.bytes)';
+
+    finalResponseType = 'Stream<Uint8List>';
+    dioResponseTypeAnnotation = '\n  @DioResponseType(ResponseType.stream)';
+  } else {
+    finalResponseType =
+        (originalHttpResponse ? 'HttpResponse<$responseType>' : responseType);
+    finalResponseType = 'Future<$finalResponseType>';
+    dioResponseTypeAnnotation = '';
+  }
 
   final defaultExtras = includeMetadata && addExtrasParameter
       ? _openApiExtrasReference(
@@ -157,8 +175,15 @@ String _toClientRequest(
 
   final sb = StringBuffer()
     ..write(
-      "  ${descriptionComment(request.description, tabForFirstLine: false, tab: '  ', end: '  ')}${request.isDeprecated ? "@Deprecated('This method is marked as deprecated')\n  " : ''}${_contentTypeHeader(request, defaultContentType)}$requestAnnotation$dioResponseTypeAnnotation\n  Future<$finalResponseType> ${request.name}(",
-    );
+        "  ${descriptionComment(request.description, tabForFirstLine: false, tab: '  ', end: '  ')}")
+    ..write(request.isDeprecated
+        ? "@Deprecated('This method is marked as deprecated')\n  "
+        : '')
+    ..write(_contentTypeHeader(request, defaultContentType))
+    ..write(requestAnnotation)
+    ..writeln(dioResponseTypeAnnotation)
+    ..write('  $finalResponseType ')
+    ..write('${request.name}(');
 
   if (request.parameters.isNotEmpty ||
       addExtrasParameter ||
@@ -268,11 +293,12 @@ String _toParameter(UniversalRequestType parameter, bool useMultipartFile) {
       '$keywordArguments${_defaultValue(parameter.type)},';
 }
 
-String _contentTypeHeader(UniversalRequest request, String defaultContentType) {
-  if (request.isMultiPart) {
+String _contentTypeHeader(
+    UniversalRequest request, ContentType defaultContentType) {
+  if (request.contentType.isMultiPart) {
     return '@MultiPart()\n  ';
   }
-  if (request.isFormUrlEncoded) {
+  if (request.contentType.isFormUrlEncoded) {
     return '@FormUrlEncoded()\n  ';
   }
   if (request.contentType != defaultContentType) {
@@ -284,12 +310,12 @@ String _contentTypeHeader(UniversalRequest request, String defaultContentType) {
 /// ` hide Headers ` for retrofit Headers
 String _hideHeaders(
   UniversalRestClient restClient,
-  String defaultContentType,
+  ContentType defaultContentType,
 ) =>
     restClient.requests.any(
       (r) =>
           r.contentType != defaultContentType &&
-          !(r.isMultiPart || r.isFormUrlEncoded),
+          !(r.contentType.isMultiPart || r.contentType.isFormUrlEncoded),
     )
         ? ' hide Headers'
         : '';

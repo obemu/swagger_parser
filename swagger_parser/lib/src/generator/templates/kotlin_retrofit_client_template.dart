@@ -2,6 +2,7 @@ import 'package:swagger_parser/src/generator/model/programming_language.dart';
 import 'package:swagger_parser/src/parser/model/normalized_identifier.dart';
 import 'package:swagger_parser/src/parser/swagger_parser_core.dart';
 import 'package:swagger_parser/src/utils/base_utils.dart';
+import 'package:swagger_parser/src/utils/content_type_utils.dart';
 import 'package:swagger_parser/src/utils/type_utils.dart';
 
 /// Return file contents for kotlin retrofit client
@@ -24,7 +25,7 @@ interface $name {''');
 String _toClientRequest(UniversalRequest request) {
   final sb = StringBuffer('''
 
-    ${descriptionComment(request.description, tabForFirstLine: false, tab: '    ', end: '    ')}${request.isDeprecated ? '@Deprecated("This method is marked as deprecated")\n    ' : ''}${request.isMultiPart ? '@MultiPart\n    ' : ''}${request.isFormUrlEncoded ? '@FormUrlEncoded\n    ' : ''}@${request.requestType.name.toUpperCase()}("${request.route}")
+    ${descriptionComment(request.description, tabForFirstLine: false, tab: '    ', end: '    ')}${request.isDeprecated ? '@Deprecated("This method is marked as deprecated")\n    ' : ''}${request.contentType.isMultiPart ? '@MultiPart\n    ' : ''}${request.contentType.isFormUrlEncoded ? '@FormUrlEncoded\n    ' : ''}@${request.requestType.name.toUpperCase()}("${request.route}")
     suspend fun ${request.name}(''');
   if (request.parameters.isEmpty) {
     sb.write(')');

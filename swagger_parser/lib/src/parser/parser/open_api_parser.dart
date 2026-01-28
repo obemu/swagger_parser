@@ -19,7 +19,13 @@ import 'package:swagger_parser/src/parser/utils/context_stack.dart';
 import 'package:swagger_parser/src/parser/utils/http_utils.dart';
 import 'package:swagger_parser/src/parser/utils/path_match.dart';
 import 'package:swagger_parser/src/parser/utils/type_utils.dart';
+import 'package:swagger_parser/src/utils/content_type_utils.dart';
 import 'package:yaml/yaml.dart';
+
+typedef _ReturnType = ({
+  SwaggerContentType? contentType,
+  UniversalType? dataType
+});
 
 /// General class for parsing OpenApi specification into universal models
 class OpenApiParser {
@@ -169,10 +175,10 @@ class OpenApiParser {
   List<UniversalRestClient> parseRestClients() {
     final restClients = <UniversalRestClient>[];
     final imports = SplayTreeSet<String>();
-    var resultContentType = config.defaultContentType;
+    var requestContentType = config.defaultContentType;
 
     /// Parses return type for client query for OpenApi v3
-    UniversalType? returnTypeV3(
+    _ReturnType? returnTypeV3(
       Map<String, dynamic> map,
       String additionalName,
     ) {
@@ -209,12 +215,13 @@ class OpenApiParser {
         imports.add(typeWithImport.import!);
       }
 
-      // List<dynamic> is not supported by Retrofit, use dynamic instead
-      if (typeWithImport.type.type == _objectConst) {
-        return typeWithImport.type.copyWith(wrappingCollections: const []);
-      }
-
-      return typeWithImport.type;
+      return (
+        contentType: SwaggerContentType.parse(contentType.key),
+        dataType: typeWithImport.type.type == _objectConst
+            // List<dynamic> is not supported by Retrofit, use dynamic instead
+            ? typeWithImport.type.copyWith(wrappingCollections: const [])
+            : typeWithImport.type
+      );
     }
 
     /// Parses query parameters (parameters and requestBody)
@@ -335,11 +342,11 @@ class OpenApiParser {
         if (contentTypes.containsKey(_multipartFormDataConst)) {
           contentType =
               contentTypes[_multipartFormDataConst] as Map<String, dynamic>;
-          resultContentType = _multipartFormDataConst;
+          requestContentType = _multipartFormDataConst;
         } else if (contentTypes.containsKey(_formUrlEncodedConst)) {
           contentType =
               contentTypes[_formUrlEncodedConst] as Map<String, dynamic>;
-          resultContentType = _formUrlEncodedConst;
+          requestContentType = _formUrlEncodedConst;
         } else {
           final content = contentTypes.containsKey(config.defaultContentType)
               ? contentTypes[config.defaultContentType]
@@ -354,7 +361,7 @@ class OpenApiParser {
           );
         }
 
-        if (resultContentType == _multipartFormDataConst) {
+        if (requestContentType == _multipartFormDataConst) {
           final schemaContent =
               contentType[_schemaConst] as Map<String, dynamic>;
 
@@ -472,7 +479,7 @@ class OpenApiParser {
     }
 
     /// Parses return type for client query for OpenApi v2
-    UniversalType? returnTypeV2(
+    _ReturnType? returnTypeV2(
       Map<String, dynamic> map,
       String additionalName,
     ) {
@@ -499,13 +506,17 @@ class OpenApiParser {
       }
 
       final type = typeWithImport.type;
-      return UniversalType(
-        type: type.type,
-        wrappingCollections:
-            // List<dynamic> is not supported by Retrofit, use dynamic instead
-            type.type == _objectConst ? const [] : type.wrappingCollections,
-        isRequired: typeWithImport.type.isRequired,
-        deprecated: type.deprecated,
+      return (
+        // OpenAPI v2 has no content-type.
+        contentType: null,
+        dataType: UniversalType(
+          type: type.type,
+          wrappingCollections:
+              // List<dynamic> is not supported by Retrofit, use dynamic instead
+              type.type == _objectConst ? const [] : type.wrappingCollections,
+          isRequired: typeWithImport.type.isRequired,
+          deprecated: type.deprecated,
+        )
       );
     }
 
@@ -521,11 +532,11 @@ class OpenApiParser {
           map[_consumesConst] is List<dynamic>) {
         final consumes = map[_consumesConst] as List<dynamic>;
         if (consumes.contains(_multipartFormDataConst)) {
-          resultContentType = _multipartFormDataConst;
+          requestContentType = _multipartFormDataConst;
         } else if (consumes.contains(_formUrlEncodedConst)) {
-          resultContentType = _formUrlEncodedConst;
+          requestContentType = _formUrlEncodedConst;
         } else if (consumes.isNotEmpty && consumes.first != null) {
-          resultContentType = consumes.first as String;
+          requestContentType = consumes.first as String;
         }
       }
       for (final rawParameter in map[_parametersConst] as List<dynamic>) {
@@ -718,8 +729,9 @@ class OpenApiParser {
             externalDocsUrl: externalDocsUrl,
             requestType: HttpRequestType.fromString(key)!,
             route: path,
-            contentType: resultContentType,
-            returnType: returnType,
+            contentType: SwaggerContentType.parse(requestContentType),
+            returnType: returnType?.dataType,
+            returnContentType: returnType?.contentType,
             parameters: parameters,
             isDeprecated:
                 requestPath[_deprecatedConst].toString().toBool() ?? false,
@@ -743,7 +755,7 @@ class OpenApiParser {
             restClients[sameTagIndex].requests.add(request);
             restClients[sameTagIndex].imports.addAll(imports);
           }
-          resultContentType = config.defaultContentType;
+          requestContentType = config.defaultContentType;
           imports.clear();
         });
       });
