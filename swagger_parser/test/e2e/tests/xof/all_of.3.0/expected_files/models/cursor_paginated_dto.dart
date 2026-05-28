@@ -10,8 +10,8 @@ part 'cursor_paginated_dto.g.dart';
 @Freezed()
 class CursorPaginatedDto with _$CursorPaginatedDto {
   const factory CursorPaginatedDto({
-    @JsonKey(includeIfNull: true) required String? nextCursor,
-    @JsonKey(includeIfNull: true) required String? previousCursor,
+    @JsonKey(includeIfNull: true) String? nextCursor,
+    @JsonKey(includeIfNull: true) String? previousCursor,
   }) = _CursorPaginatedDto;
 
   factory CursorPaginatedDto.fromJson(Map<String, Object?> json) =>

@@ -17,6 +17,6 @@ abstract class FallbackClient {
   Future<List<Pet>> findPets({
     @Deprecated('This is marked as deprecated')
     @Query('deprecatedQueryParameter')
-    required int deprecatedQueryParameter,
+    int deprecatedQueryParameter = 0,
   });
 }

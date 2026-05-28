@@ -13,8 +13,8 @@ part 'test2_request_body.g.dart';
 class Test2RequestBody with _$Test2RequestBody {
   const factory Test2RequestBody({
     required List<Example> list1,
-    @JsonKey(includeIfNull: true) required String? name,
     @JsonKey(includeIfNull: false) List<Map<String, Example>>? list2,
+    @JsonKey(includeIfNull: true) String? name,
     @JsonKey(includeIfNull: false) String? lastname,
   }) = _Test2RequestBody;
 

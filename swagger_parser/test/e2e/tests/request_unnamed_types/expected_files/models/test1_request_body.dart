@@ -11,7 +11,7 @@ part 'test1_request_body.g.dart';
 class Test1RequestBody with _$Test1RequestBody {
   const factory Test1RequestBody({
     required List<dynamic> list,
-    @JsonKey(includeIfNull: true) required String? name,
+    @JsonKey(includeIfNull: true) String? name,
     @JsonKey(includeIfNull: false) String? lastname,
   }) = _Test1RequestBody;
 

@@ -27,7 +27,7 @@ abstract class FallbackClient {
   /// even though the schema includes UserPointTransaction (PascalCase).
   @GET('/api/v1/app/user_point_transactions')
   Future<GetApiV1AppUserPointTransactionsResponse> getUserPointTransactions({
-    @Query('cursor') String? cursor,
     @Query('limit') int? limit = 20,
+    @Query('cursor') String? cursor,
   });
 }

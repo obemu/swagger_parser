@@ -11,8 +11,8 @@ part 'test_model.g.dart';
 class TestModel with _$TestModel {
   const factory TestModel({
     required int id,
-    @JsonKey(includeIfNull: true) required String? requiredNullableField,
     @JsonKey(includeIfNull: false) String? name,
+    @JsonKey(includeIfNull: true) String? requiredNullableField,
     @JsonKey(includeIfNull: false) String? optionalNullableField,
   }) = _TestModel;
 
