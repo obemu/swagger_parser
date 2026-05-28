@@ -319,10 +319,11 @@ String _hideHeaders(
         : '';
 
 /// return required if isRequired
-String _required(UniversalType t) => t.isRequired ? 'required ' : '';
+String _required(UniversalType t) =>
+    t.isRequiredInConstructor ? 'required ' : '';
 
 /// return defaultValue if have and not required
-String _defaultValue(UniversalType t) => !t.isRequired && t.defaultValue != null
+String _defaultValue(UniversalType t) => t.defaultValue != null
     ? ' = '
         '${t.wrappingCollections.isNotEmpty ? 'const ' : ''}'
         '${t.enumType != null ? '${t.type}.${protectDefaultEnum(t.defaultValue?.toCamel)?.toCamel}' : protectDefaultValue(t.defaultValue, type: t.type)}'
