@@ -354,8 +354,9 @@ String _generateUndiscriminatedWrapperClasses(
         .join('\n');
 
     // Generate constructor parameters
-    final constructorParams =
-        properties.map((prop) => '    required this.${prop.name},').join('\n');
+    final constructorParams = properties
+        .map((prop) => '    ${_required(prop)}this.${prop.name},')
+        .join('\n');
 
     // Inline synthesized variants (variantX) should not implement any interface
     final isInline = variantName.toLowerCase().startsWith('variant');
@@ -461,8 +462,9 @@ String _jsonKey(UniversalType t, bool includeIfNull) {
 }
 
 /// return required if isRequired
-String _required(UniversalType t) =>
-    t.isRequired && t.defaultValue == null ? 'required ' : '';
+String _required(UniversalType t) {
+  return t.isRequiredInConstructor ? 'required ' : '';
+}
 
 /// return defaultValue if have
 String _defaultValue(UniversalType t) => t.defaultValue != null

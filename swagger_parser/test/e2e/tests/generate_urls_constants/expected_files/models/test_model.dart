@@ -11,8 +11,8 @@ part 'test_model.g.dart';
 class TestModel with _$TestModel {
   const factory TestModel({
     required int id,
-    required String? requiredNullableField,
     String? name,
+    String? requiredNullableField,
     String? optionalNullableField,
   }) = _TestModel;
 

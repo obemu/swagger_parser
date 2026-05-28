@@ -13,9 +13,9 @@ part 'get_users_response.g.dart';
 @Freezed()
 class GetUsersResponse with _$GetUsersResponse {
   const factory GetUsersResponse({
-    @JsonKey(includeIfNull: true) required num? nextCursor,
-    @JsonKey(includeIfNull: true) required String? previousCursor,
     required List<UserDto> data,
+    @JsonKey(includeIfNull: true) num? nextCursor,
+    @JsonKey(includeIfNull: true) String? previousCursor,
   }) = _GetUsersResponse;
 
   factory GetUsersResponse.fromJson(Map<String, Object?> json) =>

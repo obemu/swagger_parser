@@ -13,12 +13,13 @@ part 'pet.g.dart';
 @Freezed()
 abstract class Pet with _$Pet {
   const factory Pet({
+    @JsonKey(includeIfNull: false) ApiSchedule? schedule,
+
     /// value in UTC, formatted in ISO String
-    @JsonKey(includeIfNull: true) required DateTime? nullableDateTime,
+    @JsonKey(includeIfNull: true) DateTime? nullableDateTime,
     @JsonKey(includeIfNull: true)
     @Deprecated('This is marked as deprecated')
-    required ApiNullableDateTime? nullableDateTimeRef,
-    @JsonKey(includeIfNull: false) ApiSchedule? schedule,
+    ApiNullableDateTime? nullableDateTimeRef,
   }) = _Pet;
 
   factory Pet.fromJson(Map<String, Object?> json) => _$PetFromJson(json);

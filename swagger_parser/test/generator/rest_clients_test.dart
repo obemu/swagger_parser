@@ -1739,7 +1739,6 @@ interface ClassNameClient {
                 type: UniversalType(
                   type: 'string',
                   name: 'token',
-                  defaultValue: 'message123',
                   isRequired: true,
                 ),
                 name: 'Authorization',
@@ -1811,10 +1810,10 @@ abstract class ClassNameClient {
   @POST('/send')
   Future<void> sendMessage({
     @Header('Authorization') required String token,
-    @Query('age') required double age,
-    @Query('adult') required bool adult,
-    @Query('unit') required Unit unit,
-    @Query('soma') required Soma soma,
+    @Query('age') double age = 17,
+    @Query('adult') bool adult = false,
+    @Query('unit') Unit unit = Unit.celsius,
+    @Query('soma') Soma soma = Soma.value1,
   });
 }
 ''';
@@ -2085,10 +2084,10 @@ abstract class ClassNameClient {
   @GET('/request')
   Future<String> getRequest({
     @Query('requiredButNotNullable') required String list3,
-    @Query('RequiredAndNullable') required String? list5,
     @Query('deepArrayNullable') List<List<List<List<String>>>>? list1,
     @Query('notRequiredButNullable') String? list2,
     @Query('notRequiredAndNotNullable') String? list4,
+    @Query('RequiredAndNullable') String? list5,
   });
 }
 ''';
@@ -2900,10 +2899,10 @@ abstract class ClassNameClient {
   @GET('/request')
   Future<String> getRequest({
     @Query('requiredButNotNullable') required String list3,
-    @Query('RequiredAndNullable') required String? list5,
     @Query('deepArrayNullable') List<List<List<List<String>>>>? list1,
     @Query('notRequiredButNullable') String? list2,
     @Query('notRequiredAndNotNullable') String? list4,
+    @Query('RequiredAndNullable') String? list5,
   });
 }
 ''';

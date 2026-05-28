@@ -222,8 +222,9 @@ String getDefaultValue(UniversalType t) {
 }
 
 /// return required if isRequired
-String _required(UniversalType t) =>
-    t.isRequired && t.defaultValue == null ? 'required ' : '';
+String _required(UniversalType t) {
+  return t.isRequiredInConstructor ? 'required ' : '';
+}
 
 /// return defaultValue if have
 String _defaultValue(UniversalType t) =>

@@ -763,26 +763,27 @@ class OpenApiParser {
       for (final propertyName in props.keys) {
         final propertyValue = props[propertyName] as Map<String, dynamic>;
         var isNullable = propertyValue[_nullableConst].toString().toBool();
+
         // OpenAPI 2.0 nullable value
-        isNullable =
-            isNullable ?? propertyValue[_xNullableConst].toString().toBool();
+        isNullable ??= propertyValue[_xNullableConst].toString().toBool();
+
+        isNullable ??= switch (propertyValue) {
+          {_anyOfConst: final List<dynamic> anyOf} => anyOf.any(
+              (e) => e is Map<String, dynamic> && e['type'] == 'null',
+            ),
+          {_oneOfConst: final List<dynamic> oneOf} => oneOf.any(
+              (e) => e is Map<String, dynamic> && e['type'] == 'null',
+            ),
+          {_allOfConst: final List<dynamic> allOf} => allOf.any(
+              (e) => e is Map<String, dynamic> && e['type'] == 'null',
+            ),
+          _ => false,
+        };
+
         final hasDefaultKey = propertyValue.containsKey(_defaultConst);
 
-        isNullable = isNullable ??
-            switch (propertyValue) {
-              {_anyOfConst: final List<dynamic> anyOf} => anyOf.any(
-                  (e) => e is Map<String, dynamic> && e['type'] == 'null',
-                ),
-              {_oneOfConst: final List<dynamic> oneOf} => oneOf.any(
-                  (e) => e is Map<String, dynamic> && e['type'] == 'null',
-                ),
-              {_allOfConst: final List<dynamic> allOf} => allOf.any(
-                  (e) => e is Map<String, dynamic> && e['type'] == 'null',
-                ),
-              _ => false,
-            };
-
         var isRequired = requiredParameters.contains(propertyName);
+
         // If inferRequiredFromNullable is enabled and there's no required array,
         // infer required from nullability
         if (!isRequired &&
@@ -792,13 +793,17 @@ class OpenApiParser {
             !isNullable) {
           isRequired = true;
         }
+
+        isRequired = switch (_apiInfo.schemaVersion) {
+          OAS.v2 when !config.useXNullable => isRequired,
+          _ => isRequired || hasDefaultKey
+        };
+
         final typeWithImport = _findType(
           propertyValue,
           name: propertyName,
           additionalName: additionalName,
-          isRequired: (_apiInfo.schemaVersion == OAS.v2 && !config.useXNullable)
-              ? isRequired
-              : isRequired || hasAllOfKey || hasDefaultKey,
+          isRequired: isRequired,
         );
 
         var validation = propertyValue;

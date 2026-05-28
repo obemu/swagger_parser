@@ -13,9 +13,9 @@ class Option with _$Option {
     @JsonKey(name: 'required_id') required int requiredId,
     @JsonKey(name: 'required_name') required String requiredName,
     @JsonKey(includeIfNull: true, name: 'required_nullable_id')
-    required int? requiredNullableId,
+    int? requiredNullableId,
     @JsonKey(includeIfNull: true, name: 'required_nullable_name')
-    required String? requiredNullableName,
+    String? requiredNullableName,
     @JsonKey(includeIfNull: false, name: 'optional_id') int? optionalId,
     @JsonKey(includeIfNull: false, name: 'optional_name') String? optionalName,
   }) = _Option;

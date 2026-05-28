@@ -80,6 +80,64 @@ final class UniversalType {
   /// Whether this property references a nullable schema
   final bool referencedNullable;
 
+  /// Whether or not this field is required in the constructor.
+  ///
+  /// Constructor params are not required iff:
+  ///   * they are not required, or
+  ///   * they are nullable, or
+  ///   * they have a default value.
+  ///
+  /// ## Example
+  ///
+  /// * [isRequiredInConstructor] is `true` and [nullable] is `true`:
+  ///
+  ///   ```dart
+  ///   class Person {
+  ///     Person({
+  ///       required this.name,
+  ///     })
+  ///
+  ///     final String? name;
+  ///   }
+  ///   ```
+  ///
+  /// * [isRequiredInConstructor] is `false` and [nullable] is `true`:
+  ///
+  ///   ```dart
+  ///   class Person {
+  ///     Person({
+  ///       this.name,
+  ///     })
+  ///
+  ///     final String? name;
+  ///   }
+  ///   ```
+  ///
+  /// * [isRequiredInConstructor] is `false/true` and [nullable] is `false`:
+  ///
+  ///   ```dart
+  ///   class Person {
+  ///     Person({
+  ///       required this.name,
+  ///     })
+  ///
+  ///     final String name;
+  ///   }
+  ///   ```
+  ///
+  ///   **NOTE:** Non-nullable properties are always required.
+  bool get isRequiredInConstructor {
+    if (!isRequired) {
+      return false;
+    }
+
+    if (nullable || referencedNullable || defaultValue != null) {
+      return false;
+    }
+
+    return true;
+  }
+
   /// Copy of [UniversalType] with new values
   UniversalType copyWith({
     String? type,
@@ -129,13 +187,16 @@ final class UniversalType {
 
   /// Function for compare to put required named parameters first
   int compareTo(UniversalType other) {
-    if (isRequired == other.isRequired &&
-        (other.defaultValue == null) == (defaultValue == null)) {
-      return 0;
-    } else if (isRequired && defaultValue == null) {
-      return -1;
+    switch (isRequiredInConstructor) {
+      case false when other.isRequiredInConstructor:
+        return 1;
+
+      case true when !other.isRequiredInConstructor:
+        return -1;
+
+      default:
+        return 0;
     }
-    return 1;
   }
 
   @override

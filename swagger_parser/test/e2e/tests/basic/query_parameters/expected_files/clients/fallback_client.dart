@@ -18,14 +18,14 @@ abstract class FallbackClient {
   Future<List<Pet>> findPets({
     @Query('offsetRequiredTrueWithoutDefault')
     required int offsetRequiredTrueWithoutDefault,
-    @Query('offsetRequiredFalseWithoutDefault')
-    int? offsetRequiredFalseWithoutDefault,
-    @Query('offsetNoRequiredWithoutDefault')
-    int? offsetNoRequiredWithoutDefault,
+    @Query('offsetRequiredTrueWithDefault')
+    int offsetRequiredTrueWithDefault = 0,
     @Query('offsetRequiredFalseWithDefault')
     int? offsetRequiredFalseWithDefault = 0,
+    @Query('offsetRequiredFalseWithoutDefault')
+    int? offsetRequiredFalseWithoutDefault,
     @Query('offsetNoRequiredWithDefault') int? offsetNoRequiredWithDefault = 0,
-    @Query('offsetRequiredTrueWithDefault')
-    required int offsetRequiredTrueWithDefault,
+    @Query('offsetNoRequiredWithoutDefault')
+    int? offsetNoRequiredWithoutDefault,
   });
 }

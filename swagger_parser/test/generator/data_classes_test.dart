@@ -2437,10 +2437,10 @@ part 'class_name.g.dart';
 class ClassName {
   const ClassName({
     required this.list3,
-    required this.list5,
     this.list1,
     this.list2,
     this.list4,
+    this.list5,
   });
   
   factory ClassName.fromJson(Map<String, Object?> json) => _$ClassNameFromJson(json);
@@ -2514,14 +2514,14 @@ part 'class_name.g.dart';
 class ClassName with _$ClassName {
   const factory ClassName({
     required String list3,
-    @JsonKey(includeIfNull: true)
-    required String? list5,
     @JsonKey(includeIfNull: false)
     List<List<List<List<String?>>>>? list1,
     @JsonKey(includeIfNull: false)
     String? list2,
     @JsonKey(includeIfNull: false)
     String? list4,
+    @JsonKey(includeIfNull: true)
+    String? list5,
   }) = _ClassName;
   
   factory ClassName.fromJson(Map<String, Object?> json) => _$ClassNameFromJson(json);

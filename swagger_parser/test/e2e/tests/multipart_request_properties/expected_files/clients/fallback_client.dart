@@ -35,9 +35,9 @@ abstract class FallbackClient {
   @GET('/test-multipart-required-true')
   Future<void> testMultipartRequiredTrue({
     @Part(name: 'files') required List<File> files,
-    @Part(name: 'name') required String? name,
-    @Part(name: 'status') Enum0? status = Enum0.first,
     @Part(name: 'address') Object0? address,
+    @Part(name: 'name') String? name,
+    @Part(name: 'status') Enum0? status = Enum0.first,
     @Part(name: 'image') File? image,
   });
 
@@ -46,8 +46,8 @@ abstract class FallbackClient {
   @GET('/test-multipart-required-false')
   Future<void> testMultipartRequiredFalse({
     @Part(name: 'files') required List<File> files,
-    @Part(name: 'name') required String? name,
     @Part(name: 'address') Object1? address,
+    @Part(name: 'name') String? name,
     @Part(name: 'image') File? image,
   });
 }
