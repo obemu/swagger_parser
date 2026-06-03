@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:swagger_parser/src/generator/model/field_parser.dart';
 import 'package:swagger_parser/src/generator/model/programming_language.dart';
 import 'package:swagger_parser/src/parser/model/normalized_identifier.dart';
 import 'package:swagger_parser/src/parser/swagger_parser_core.dart';
@@ -10,6 +11,7 @@ String dartFreezedDtoTemplate(
   UniversalComponentClass dataClass, {
   required bool useMultipartFile,
   required bool includeIfNull,
+  required List<FieldParser> fieldParsers,
   bool generateValidator = false,
   bool isV3 = false,
   bool useFlutterCompute = false,
@@ -24,8 +26,23 @@ String dartFreezedDtoTemplate(
       useFlutterCompute ? _generateFlutterComputeSerializer(className) : '';
   final asyncImport = useFlutterCompute ? "import 'dart:async';\n\n" : '';
 
+  final actualFieldParsers = fieldParsers
+      .where(
+        (parser) => dataClass.parameters.any(
+          (type) =>
+              type.toSuitableType(
+                ProgrammingLanguage.dart,
+                useMultipartFile: useMultipartFile,
+              ) ==
+              parser.applyToType,
+        ),
+      )
+      .toList();
+  final fieldParsersImports =
+      '\n\n${actualFieldParsers.map((e) => "import '${e.parserAbsolutePath}';").toSet().join('\n')}';
+
   return '''
-$asyncImport${ioImport(dataClass.parameters, useMultipartFile: useMultipartFile)}import 'package:freezed_annotation/freezed_annotation.dart';
+$asyncImport${ioImport(dataClass.parameters, useMultipartFile: useMultipartFile)}import 'package:freezed_annotation/freezed_annotation.dart';${actualFieldParsers.isEmpty ? '' : fieldParsersImports}
 ${isUndiscriminatedUnion ? "import 'package:json_annotation/json_annotation.dart';\n" : ''}${dartImports(imports: _filterUnionImportsForFreezed(dataClass))}
 part '${dataClass.name.toSnake}.freezed.dart';
 part '${dataClass.name.toSnake}.g.dart';
@@ -38,7 +55,7 @@ ${descriptionComment(dataClass.description)}@Freezed(${[
       "fallbackUnion: '$fallbackUnion'",
   ].join(', ')})
 ${_classModifier(isUnion: isUnion, isV3: isV3)}class $className with _\$$className {
-${_factories(dataClass, className, useMultipartFile, includeIfNull, fallbackUnion, isUnion: isUnion)}
+${_factories(dataClass, className, useMultipartFile, includeIfNull, fallbackUnion, isUnion: isUnion, fieldParsers: actualFieldParsers)}
 ${_jsonFactories(className, dataClass.undiscriminatedUnionVariants)}
 ${generateValidator ? dataClass.parameters.map(_validationString).nonNulls.join() : ''}}
 ${generateValidator ? _validateMethod(className, dataClass.parameters) : ''}$serializerClass''';
@@ -182,10 +199,11 @@ String _factories(
   bool includeIfNull,
   String? fallbackUnion, {
   required bool isUnion,
+  required List<FieldParser> fieldParsers,
 }) {
   if (!isUnion) {
     return '''
-  const factory $className(${dataClass.parameters.isNotEmpty ? '{' : ''}${_parametersToString(dataClass.parameters, useMultipartFile, includeIfNull)}${dataClass.parameters.isNotEmpty ? '\n  }' : ''}) = _$className;''';
+  const factory $className(${dataClass.parameters.isNotEmpty ? '{' : ''}${_parametersToString(dataClass.parameters, useMultipartFile, includeIfNull, fieldParsers)}${dataClass.parameters.isNotEmpty ? '\n  }' : ''}) = _$className;''';
   }
 
   if (dataClass.undiscriminatedUnionVariants case final variants?
@@ -195,6 +213,7 @@ String _factories(
       variants,
       useMultipartFile,
       includeIfNull,
+      fieldParsers,
     );
   }
 
@@ -217,7 +236,7 @@ String _factories(
 
     factories.add('''
   @FreezedUnionValue('$discriminatorValue')
-  const factory $className.$factoryName(${factoryParameters.isNotEmpty ? '{' : ''}${_parametersToString(factoryParameters, useMultipartFile, includeIfNull)}${factoryParameters.isNotEmpty ? '\n  }' : ''}) = $unionItemClassName;
+  const factory $className.$factoryName(${factoryParameters.isNotEmpty ? '{' : ''}${_parametersToString(factoryParameters, useMultipartFile, includeIfNull, fieldParsers)}${factoryParameters.isNotEmpty ? '\n  }' : ''}) = $unionItemClassName;
 ''');
   }
 
@@ -235,10 +254,12 @@ String _factories(
 }
 
 String _createFactoriesForUndiscriminatedUnion(
-    String className,
-    Map<String, Set<UniversalType>> variants,
-    bool useMultipartFile,
-    bool includeIfNull) {
+  String className,
+  Map<String, Set<UniversalType>> variants,
+  bool useMultipartFile,
+  bool includeIfNull,
+  List<FieldParser> fieldParsers,
+) {
   final factories = <String>[];
   for (final MapEntry(key: variantName, value: factoryParameters)
       in variants.entries) {
@@ -247,7 +268,7 @@ String _createFactoriesForUndiscriminatedUnion(
     final unionItemClassName = className + variantName.toPascal;
     factories.add('''
   @JsonSerializable()
-  const factory $className.$factoryName(${factoryParameters.isNotEmpty ? '{' : ''}${_parametersToString(factoryParameters, useMultipartFile, includeIfNull)}${factoryParameters.isNotEmpty ? '\n  }' : ''}) = $unionItemClassName;
+  const factory $className.$factoryName(${factoryParameters.isNotEmpty ? '{' : ''}${_parametersToString(factoryParameters, useMultipartFile, includeIfNull, fieldParsers)}${factoryParameters.isNotEmpty ? '\n  }' : ''}) = $unionItemClassName;
   ''');
   }
   return factories.join('\n');
@@ -327,18 +348,26 @@ String? _validationString(UniversalType type) {
 }
 
 String _parametersToString(
-    Set<UniversalType> parameters, bool useMultipartFile, bool includeIfNull) {
+  Set<UniversalType> parameters,
+  bool useMultipartFile,
+  bool includeIfNull,
+  List<FieldParser> fieldParsers,
+) {
   final sortedByRequired = Set<UniversalType>.from(
     parameters.sorted((a, b) => a.compareTo(b)),
   );
-  return sortedByRequired
-      .mapIndexed(
-        (i, e) =>
-            '\n${i != 0 && (e.description?.isNotEmpty ?? false) ? '\n' : ''}${descriptionComment(e.description, tab: '    ')}'
-            '${_jsonKey(e, includeIfNull)}    ${_required(e)}'
-            '${e.toSuitableType(ProgrammingLanguage.dart, useMultipartFile: useMultipartFile)} ${e.name},',
-      )
-      .join();
+  return sortedByRequired.mapIndexed(
+    (i, e) {
+      final dartType = e.toSuitableType(ProgrammingLanguage.dart,
+          useMultipartFile: useMultipartFile);
+      final fieldParser =
+          fieldParsers.firstWhereOrNull((f) => f.applyToType == dartType);
+
+      return '\n${i != 0 && (e.description?.isNotEmpty ?? false) ? '\n' : ''}${descriptionComment(e.description, tab: '    ')}'
+          '${fieldParser != null ? '    @${fieldParser.parserName}()\n' : ''}${_jsonKey(e, includeIfNull)}    '
+          '${_required(e)}$dartType ${e.name},';
+    },
+  ).join();
 }
 
 String _jsonKey(UniversalType t, bool includeIfNull) {
