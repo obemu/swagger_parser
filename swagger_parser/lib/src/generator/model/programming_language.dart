@@ -78,6 +78,7 @@ enum ProgrammingLanguage {
                 dataClass,
                 generateValidator: generateValidator,
                 isV3: useFreezed3,
+                fieldParsers: fieldParsers,
                 useMultipartFile: useMultipartFile,
                 includeIfNull: includeIfNull,
                 useFlutterCompute: useFlutterCompute,

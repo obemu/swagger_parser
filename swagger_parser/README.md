@@ -170,7 +170,8 @@ swagger_parser:
     - "/some/wildcard/*/path"
     - "/another/wildcard/**"
 
-  # Optional (dart & json_serializable only). Set field parsers for JSON serializable.
+  # Optional (dart & json_serializable/freezed only).
+  # Set field parsers for JSON serializable.
   #
   # Field parsers are used to parse specific fields of a DTO.
   #
