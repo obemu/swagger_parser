@@ -15,6 +15,7 @@ String dartFreezedDtoTemplate(
   bool generateValidator = false,
   bool isV3 = false,
   bool useFlutterCompute = false,
+  bool makeCollectionsUnmodifiable = true,
   String? fallbackUnion,
 }) {
   final className = dataClass.name.toPascal;
@@ -45,19 +46,23 @@ String dartFreezedDtoTemplate(
   final fieldParsersImports =
       '\n\n${actualFieldParsers.map((e) => "import '${e.parserAbsolutePath}';").toSet().join('\n')}';
 
+  final freezedProps = [
+    if (discriminator != null) "unionKey: '${discriminator.propertyName}'",
+    if (discriminator != null &&
+        fallbackUnion != null &&
+        fallbackUnion.isNotEmpty)
+      "fallbackUnion: '$fallbackUnion'",
+    if (!makeCollectionsUnmodifiable)
+      'makeCollectionsUnmodifiable: $makeCollectionsUnmodifiable'
+  ];
+
   return '''
 $asyncImport${ioImport(dataClass.parameters, useMultipartFile: useMultipartFile)}import 'package:freezed_annotation/freezed_annotation.dart';${actualFieldParsers.isEmpty ? '' : fieldParsersImports}
 ${isUndiscriminatedUnion ? "import 'package:json_annotation/json_annotation.dart';\n" : ''}${dartImports(imports: _filterUnionImportsForFreezed(dataClass))}
 part '${dataClass.name.toSnake}.freezed.dart';
 part '${dataClass.name.toSnake}.g.dart';
 
-${descriptionComment(dataClass.description)}@Freezed(${[
-    if (discriminator != null) "unionKey: '${discriminator.propertyName}'",
-    if (discriminator != null &&
-        fallbackUnion != null &&
-        fallbackUnion.isNotEmpty)
-      "fallbackUnion: '$fallbackUnion'",
-  ].join(', ')})
+${descriptionComment(dataClass.description)}@Freezed(${freezedProps.join(', ')})
 ${_classModifier(isUnion: isUnion, isV3: isV3)}class $className with _\$$className {
 ${_factories(dataClass, className, useMultipartFile, includeIfNull, fallbackUnion, isUnion: isUnion, fieldParsers: actualFieldParsers)}
 ${_jsonFactories(className, dataClass.undiscriminatedUnionVariants)}

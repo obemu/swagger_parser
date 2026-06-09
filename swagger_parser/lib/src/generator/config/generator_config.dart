@@ -36,6 +36,7 @@ class GeneratorConfig {
     this.useFlutterCompute = false,
     this.generateUrlsConstants = false,
     this.fieldParsers = const [],
+    this.makeCollectionsUnmodifiable = true,
   });
 
   /// Optional. Set API name for folder and export file or merged output file
@@ -177,4 +178,9 @@ class GeneratorConfig {
 
   /// {@macro field_parsers}
   final List<FieldParser> fieldParsers;
+
+  /// DART ONLY
+  /// Optional, defaults to `true`.
+  /// Set `false` to make collections for models from freezed modifiable.
+  final bool makeCollectionsUnmodifiable;
 }

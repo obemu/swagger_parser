@@ -39,6 +39,7 @@ final class FillController {
           includeIfNull: config.includeIfNull,
           useFlutterCompute: config.useFlutterCompute,
           fallbackUnion: config.fallbackUnion,
+          makeCollectionsUnmodifiable: config.makeCollectionsUnmodifiable,
         ),
       );
 
