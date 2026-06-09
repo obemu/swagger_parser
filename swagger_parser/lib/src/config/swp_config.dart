@@ -53,6 +53,7 @@ class SWPConfig {
     this.useFlutterCompute = false,
     this.generateUrlsConstants = false,
     this.fieldParsers = const [],
+    this.makeCollectionsUnmodifiable = true,
   });
 
   /// Internal constructor of [SWPConfig]
@@ -98,6 +99,7 @@ class SWPConfig {
     required this.useFlutterCompute,
     required this.generateUrlsConstants,
     required this.fieldParsers,
+    required this.makeCollectionsUnmodifiable,
     this.fallbackUnion,
   });
 
@@ -382,6 +384,10 @@ class SWPConfig {
       fieldParsers = List.from(rootConfig!.fieldParsers);
     }
 
+    final makeCollectionsUnmodifiable =
+        yamlMap['make_collections_unmodifiable'] as bool? ??
+            rootConfig?.makeCollectionsUnmodifiable;
+
     // Default config
     final dc = SWPConfig(name: name, outputDirectory: outputDirectory);
 
@@ -432,6 +438,8 @@ class SWPConfig {
       useFlutterCompute: useFlutterCompute ?? dc.useFlutterCompute,
       includePaths: includePathsList ?? dc.includePaths,
       generateUrlsConstants: generateUrlsConstants ?? dc.generateUrlsConstants,
+      makeCollectionsUnmodifiable:
+          makeCollectionsUnmodifiable ?? dc.makeCollectionsUnmodifiable,
     );
   }
 
@@ -674,6 +682,11 @@ class SWPConfig {
   /// {@endtemplate}
   final List<FieldParser> fieldParsers;
 
+  /// DART ONLY
+  /// Optional, defaults to `true`.
+  /// Set `false` to make collections for models from freezed modifiable.
+  final bool makeCollectionsUnmodifiable;
+
   /// Convert [SWPConfig] to [GeneratorConfig]
   GeneratorConfig toGeneratorConfig() {
     return GeneratorConfig(
@@ -706,6 +719,7 @@ class SWPConfig {
       useFlutterCompute: useFlutterCompute,
       generateUrlsConstants: generateUrlsConstants,
       fieldParsers: fieldParsers,
+      makeCollectionsUnmodifiable: makeCollectionsUnmodifiable,
     );
   }
 

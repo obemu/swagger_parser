@@ -54,6 +54,7 @@ enum ProgrammingLanguage {
     required bool useDartMappableNaming,
     required bool includeIfNull,
     required List<FieldParser> fieldParsers,
+    required bool makeCollectionsUnmodifiable,
     bool useFlutterCompute = false,
     String? fallbackUnion,
   }) {
@@ -83,6 +84,7 @@ enum ProgrammingLanguage {
                 includeIfNull: includeIfNull,
                 useFlutterCompute: useFlutterCompute,
                 fallbackUnion: fallbackUnion,
+                makeCollectionsUnmodifiable: makeCollectionsUnmodifiable,
               ),
             JsonSerializer.jsonSerializable => dartJsonSerializableDtoTemplate(
                 dataClass,

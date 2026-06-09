@@ -283,6 +283,11 @@ swagger_parser:
   # and serialize/deserialize top-level functions for isolate-based multithreading.
   # This enables parsing models on a separate thread using Flutter's compute function.
   use_flutter_compute: false
+
+  # DART ONLY
+  # Optional, defaults to `true`.
+  # Set `false` to make collections for models from freezed modifiable.
+  #make_collections_unmodifiable: true
 ```
 
 For multiple schemes:
