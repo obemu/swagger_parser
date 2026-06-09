@@ -26,9 +26,13 @@ String dartFreezedDtoTemplate(
       useFlutterCompute ? _generateFlutterComputeSerializer(className) : '';
   final asyncImport = useFlutterCompute ? "import 'dart:async';\n\n" : '';
 
+  final expectedParams = <UniversalType>{
+    ...dataClass.parameters,
+    ..._getUnionFactories(dataClass).expand((e) => e.parameters)
+  };
   final actualFieldParsers = fieldParsers
       .where(
-        (parser) => dataClass.parameters.any(
+        (parser) => expectedParams.any(
           (type) =>
               type.toSuitableType(
                 ProgrammingLanguage.dart,
@@ -217,28 +221,14 @@ String _factories(
     );
   }
 
-  final factories = <String>[];
-  for (final discriminatorValue
-      in dataClass.discriminator!.discriminatorValueToRefMapping.keys) {
-    final discriminator = dataClass.discriminator!;
-    final discriminatorRef =
-        discriminator.discriminatorValueToRefMapping[discriminatorValue]!;
+  final factories = _getUnionFactories(dataClass).map((e) {
+    final unionItemClassName = className + e.discriminator.toPascal;
 
-    final (protectedName, _) = protectName(discriminatorValue, isMethod: true);
-    final factoryName = protectedName!.toCamel;
-
-    final factoryParameters =
-        discriminator.refProperties[discriminatorRef]!.where((e) {
-      return e.jsonKey != discriminator.jsonKey;
-    }).toSet();
-
-    final unionItemClassName = className + discriminatorValue.toPascal;
-
-    factories.add('''
-  @FreezedUnionValue('$discriminatorValue')
-  const factory $className.$factoryName(${factoryParameters.isNotEmpty ? '{' : ''}${_parametersToString(factoryParameters, useMultipartFile, includeIfNull, fieldParsers)}${factoryParameters.isNotEmpty ? '\n  }' : ''}) = $unionItemClassName;
-''');
-  }
+    return '''
+  @FreezedUnionValue('${e.discriminator}')
+  const factory $className.${e.factoryName}(${e.parameters.isNotEmpty ? '{' : ''}${_parametersToString(e.parameters, useMultipartFile, includeIfNull, fieldParsers)}${e.parameters.isNotEmpty ? '\n  }' : ''}) = $unionItemClassName;
+''';
+  }).toList();
 
   if (fallbackUnion != null && fallbackUnion.isNotEmpty) {
     final (protectedFallbackName, _) =
@@ -450,4 +440,39 @@ Set<String> _filterUnionImportsForFreezed(UniversalComponentClass dataClass) {
   }
 
   return filteredImports;
+}
+
+typedef _UnionFactory = ({
+  Set<UniversalType> parameters,
+  String factoryName,
+  String discriminator,
+});
+
+Iterable<_UnionFactory> _getUnionFactories(
+  UniversalComponentClass dataClass,
+) sync* {
+  final rootDiscriminator = dataClass.discriminator;
+  if (rootDiscriminator == null) {
+    return;
+  }
+
+  for (final discriminatorValue
+      in rootDiscriminator.discriminatorValueToRefMapping.keys) {
+    final discriminatorRef =
+        rootDiscriminator.discriminatorValueToRefMapping[discriminatorValue]!;
+
+    final (protectedName, _) = protectName(discriminatorValue, isMethod: true);
+    final factoryName = protectedName!.toCamel;
+
+    final factoryParameters =
+        rootDiscriminator.refProperties[discriminatorRef]!.where((e) {
+      return e.jsonKey != rootDiscriminator.jsonKey;
+    }).toSet();
+
+    yield (
+      parameters: factoryParameters,
+      factoryName: factoryName,
+      discriminator: discriminatorValue,
+    );
+  }
 }
