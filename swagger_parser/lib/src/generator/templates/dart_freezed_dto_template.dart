@@ -38,6 +38,7 @@ String dartFreezedDtoTemplate(
               type.toSuitableType(
                 ProgrammingLanguage.dart,
                 useMultipartFile: useMultipartFile,
+                ignoreNullable: true,
               ) ==
               parser.applyToType,
         ),
@@ -353,10 +354,13 @@ String _parametersToString(
   );
   return sortedByRequired.mapIndexed(
     (i, e) {
+      final fieldParserDartType = e.toSuitableType(ProgrammingLanguage.dart,
+          useMultipartFile: useMultipartFile, ignoreNullable: true);
+      final fieldParser = fieldParsers
+          .firstWhereOrNull((f) => f.applyToType == fieldParserDartType);
+
       final dartType = e.toSuitableType(ProgrammingLanguage.dart,
           useMultipartFile: useMultipartFile);
-      final fieldParser =
-          fieldParsers.firstWhereOrNull((f) => f.applyToType == dartType);
 
       return '\n${i != 0 && (e.description?.isNotEmpty ?? false) ? '\n' : ''}${descriptionComment(e.description, tab: '    ')}'
           '${fieldParser != null ? '    @${fieldParser.parserName}()\n' : ''}${_jsonKey(e, includeIfNull)}    '

@@ -13,6 +13,7 @@ extension UniversalTypeX on UniversalType {
   String toSuitableType(
     ProgrammingLanguage lang, {
     required bool useMultipartFile,
+    bool ignoreNullable = false,
   }) {
     final sb = StringBuffer();
 
@@ -35,28 +36,30 @@ extension UniversalTypeX on UniversalType {
     }
     sb.write(baseTypeName);
 
-    // Determine if a '?' should be appended to the baseTypeName.
-    var addQuestionMarkToBaseTypeName = false;
+    if (!ignoreNullable) {
+      // Determine if a '?' should be appended to the baseTypeName.
+      var addQuestionMarkToBaseTypeName = false;
 
-    if (wrappingCollections.isNotEmpty) {
-      // If it's a collection, the item's nullability is determined by the
-      // 'itemIsNullable' property of the innermost collection.
-      if (wrappingCollections.last.itemIsNullable) {
-        addQuestionMarkToBaseTypeName = true;
+      if (wrappingCollections.isNotEmpty) {
+        // If it's a collection, the item's nullability is determined by the
+        // 'itemIsNullable' property of the innermost collection.
+        if (wrappingCollections.last.itemIsNullable) {
+          addQuestionMarkToBaseTypeName = true;
+        }
+      } else {
+        // If it's not a collection, the type's nullability is determined by
+        // UniversalType.nullable and whether it has a default value.
+        if (nullable || referencedNullable) {
+          addQuestionMarkToBaseTypeName = true;
+        }
       }
-    } else {
-      // If it's not a collection, the type's nullability is determined by
-      // UniversalType.nullable and whether it has a default value.
-      if (nullable || referencedNullable) {
-        addQuestionMarkToBaseTypeName = true;
-      }
-    }
 
-    if (addQuestionMarkToBaseTypeName) {
-      // Special case for Dart: 'dynamic?' is not valid, it's just 'dynamic'.
-      // For other types in Dart, or any type in Kotlin, append '?'.
-      if (!(lang == ProgrammingLanguage.dart && baseTypeName == 'dynamic')) {
-        sb.write('?');
+      if (addQuestionMarkToBaseTypeName) {
+        // Special case for Dart: 'dynamic?' is not valid, it's just 'dynamic'.
+        // For other types in Dart, or any type in Kotlin, append '?'.
+        if (!(lang == ProgrammingLanguage.dart && baseTypeName == 'dynamic')) {
+          sb.write('?');
+        }
       }
     }
 
