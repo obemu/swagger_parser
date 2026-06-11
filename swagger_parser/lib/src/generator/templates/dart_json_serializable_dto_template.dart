@@ -43,6 +43,7 @@ String dartJsonSerializableDtoTemplate(
                 p.toSuitableType(
                   ProgrammingLanguage.dart,
                   useMultipartFile: useMultipartFile,
+                  ignoreNullable: true,
                 ),
               ) ==
               e.applyToType,
@@ -380,8 +381,9 @@ String _generateUndiscriminatedWrapperClasses(
         .join('\n');
 
     // Generate constructor parameters
-    final constructorParams =
-        properties.map((prop) => '    ${_required(prop)}this.${prop.name},').join('\n');
+    final constructorParams = properties
+        .map((prop) => '    ${_required(prop)}this.${prop.name},')
+        .join('\n');
 
     // Inline synthesized variants (variantX) should not implement any interface
     final isInline = variantName.toLowerCase().startsWith('variant');
@@ -441,13 +443,17 @@ String _parametersInClass(
   List<FieldParser> fieldParsers,
 ) =>
     parameters.mapIndexed((i, e) {
-      final dartType = _renameUnionTypes(e.toSuitableType(
-          ProgrammingLanguage.dart,
-          useMultipartFile: useMultipartFile));
-      final fieldParser =
-          fieldParsers.firstWhereOrNull((f) => f.applyToType == dartType);
+      final fieldParserDartType = e.toSuitableType(ProgrammingLanguage.dart,
+          useMultipartFile: useMultipartFile, ignoreNullable: true);
+      final fieldParser = fieldParsers
+          .firstWhereOrNull((f) => f.applyToType == fieldParserDartType);
+
+      final dartType = e.toSuitableType(ProgrammingLanguage.dart,
+          useMultipartFile: useMultipartFile);
+
       return '\n${i != 0 && (e.description?.isNotEmpty ?? false) ? '\n' : ''}${descriptionComment(e.description, tab: '  ')}'
-          '${fieldParser != null ? '\t@${fieldParser.parserName}()\n' : ''}${_jsonKey(e, includeIfNull)}  final ${_renameUnionTypes(e.toSuitableType(ProgrammingLanguage.dart, useMultipartFile: useMultipartFile))} ${e.name};';
+          '${fieldParser != null ? '\t@${fieldParser.parserName}()\n' : ''}${_jsonKey(e, includeIfNull)}  '
+          'final ${_renameUnionTypes(dartType)} ${e.name};';
     }).join();
 
 String _parametersInConstructor(
